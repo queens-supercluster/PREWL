@@ -3,7 +3,7 @@ Prompt Engineering Wrapper for LLMs (PREWL): A library for rapidly prototyping L
 
 ## Usage
 ```python
-import prewl
+import prewl, json
 
 
 #-----------------------------------------#
@@ -19,27 +19,40 @@ prewl.configure({
     },
     'repeat-limit': 10, # if making repeated requests, no more than 10
     'newline-delimited': True, # Should a new line indicate the end of the completion
+    'classes': ['positive', 'negative', 'neutral'], # defaults to None
 })
 
 
 #-----------------------------------------#
 
 PROMPTS = """
-Text: I really don't like this movie.
-Sentiment: negative
+[
+    {
+        "text": "I really don't like this movie.",
+        "sentiment": "negative"
+    },
+    
+    {
+        "text": "This flick was sick!",
+        "sentiment": "positive"
+    },
 
-Text: This flick was sick!
-Sentiment: positive
-
-Text: Meh. It was ok. I've seen better, though.
-Sentiment: neutral
+    {
+        "text": "It was ok. I've seen better, though.",
+        "sentiment": "neutral"
+    }
+]
 """
 
-# Creates a function that will extract based on the regex text
-INPUT_REGEX = prewl.regex_function("Text: (.+)")
-OUTPUT_REGEX = prewl.regex_function("Sentiment: (.+)")
+prompt_config = json.loads(PROMPTS)
 
-prompts = prewl.load_prompts(PROMPTS, INPUT_REGEX, OUTPUT_REGEX)
+PATTERN = """
+Text: {text}
+Sentiment: {sentiment}
+"""
+
+# Prompts objects
+prompts = prewl.load_prompts(prompt_config, PATTERN)
 
 # Optionally load prompts from file
 # prompts = prewl.load_prompts("prompts.txt", INPUT_REGEX, OUTPUT_REGEX)
@@ -55,7 +68,7 @@ def check_for_positive(resp):
 #  (1) prompt the server
 #  (2) fetch the response
 #  (3) returns the parsed result
-model = prewl.train(prompts)
+model = prewl.train(prompts) # Model object
 
 print(model.infer("This movie was off the hook!")) # Response should be True or "positive"
 
