@@ -1,4 +1,6 @@
 
 
 class Promps(object):
-    pass
+    def __init__(self):
+	self.object = object
+
