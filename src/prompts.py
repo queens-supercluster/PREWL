@@ -14,7 +14,7 @@ class Promps(object):
 
     def complete(prompt_config_entry):
         for k in prompt_config_entry:
-            prompt = prompt.replace('{'+k+'}',prompt_config[0][k])
+            prompt = prompt.replace('{'+k+'}',prompt_config_entry[k])
 
     def compile_inputs():
         for i in self.examples:
