@@ -7,7 +7,6 @@ Prompt Engineering Wrapper for LLMs (PREWL): A library for rapidly prototyping L
 ```python
 import prewl, json
 
-
 #-----------------------------------------#
 
 # Optionally use a config.json
@@ -15,15 +14,15 @@ import prewl, json
 
 # Dynamically detect if the argument is json or a file with json
 prewl.configure({
-    'backend': {
-        'service'   : 'gpt3', # gpt2, 6b, ...
-        'token'     : '12345', # whatever is required for authentication
-    },
+    # 'backend': {
+    #     'service'   : 'gpt3', # gpt2, 6b, ...
+    #     'token'     : '12345', # whatever is required for authentication
+    # },
+    'backend': {'service': 'manual'},
     'repeat-limit': 10, # if making repeated requests, no more than 10
     'newline-delimited': True, # Should a new line indicate the end of the completion
     'classes': ['positive', 'negative', 'neutral'], # defaults to None
 })
-
 
 #-----------------------------------------#
 
@@ -46,7 +45,7 @@ PROMPTS = """
 ]
 """
 
-prompt_config = json.loads(PROMPTS)
+examples = json.loads(PROMPTS)
 
 PATTERN = """
 Text: {text}
@@ -54,15 +53,8 @@ Sentiment: {sentiment}
 """
 
 # Prompts objects
-prompts = prewl.load_prompts(prompt_config, PATTERN)
+prompts = prewl.load_prompts(PATTERN, examples, 'sentiment')
 
-# Optionally load prompts from file
-# prompts = prewl.load_prompts("prompts.txt", INPUT_REGEX, OUTPUT_REGEX)
-
-# Optionally use a custom method
-def check_for_positive(resp):
-    return "positive" in resp
-# prompts = prewl.load_prompts(PROMPTS, INPUT_REGEX, check_for_positive)
 
 #-----------------------------------------#
 
@@ -72,8 +64,17 @@ def check_for_positive(resp):
 #  (3) returns the parsed result
 model = prewl.train(prompts) # Model object
 
-print(model.infer("This movie was off the hook!")) # Response should be True or "positive"
+# Optionally use a custom method
+def check_for_positive(resp):
+    return "positive" in resp
+model = prewl.train(prompts, check_for_positive)
 
+new_input = "This movie was off the hook!"
+resp = model.infer(new_input)
+
+print("\n New input: ", new_input)
+print("Prediction: ", resp)
+print()
 ```
 
 ## Contributing
