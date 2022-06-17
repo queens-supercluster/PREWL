@@ -1,7 +1,9 @@
 # PREWL
+
 Prompt Engineering Wrapper for LLMs (PREWL): A library for rapidly prototyping LLM-based applications via prompt engineering for NLU.
 
 ## Usage
+
 ```python
 import prewl, json
 
@@ -31,7 +33,7 @@ PROMPTS = """
         "text": "I really don't like this movie.",
         "sentiment": "negative"
     },
-    
+
     {
         "text": "This flick was sick!",
         "sentiment": "positive"
@@ -75,10 +77,13 @@ print(model.infer("This movie was off the hook!")) # Response should be True or 
 ```
 
 ## Contributing
+
 Coming soon...
 
 ## Requirements
+
 Coming soon...
 
 ## Citing This Work
+
 Coming soon...
