@@ -3,7 +3,10 @@ from prewl.endpoints.base import Endpoint
 class GPT2(Endpoint):
     
     def call(self, prompt):
+        import os
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
         import tensorflow as tf
+        tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
         from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
         tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
         model = TFGPT2LMHeadModel.from_pretrained("gpt2", pad_token_id=tokenizer.eos_token_id)
