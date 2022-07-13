@@ -15,6 +15,7 @@ prewl.configure({
     'repeat-limit': 10, # if making repeated requests, no more than 10
     'newline-delimited': True, # Should a new line indicate the end of the completion
     'classes': ['positive', 'negative', 'neutral'], # defaults to None
+    'max_length": 100,
 })
 
 #-----------------------------------------#
