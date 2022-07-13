@@ -21,5 +21,4 @@ class GPT2(Endpoint):
         # Generates text until the output length using greedy search as the decoding method.
         greedy_output = model.generate(input_ids, max_length=100)
 
-        print(tokenizer.decode(greedy_output[0], skip_special_tokens=True))
-
+        return tokenizer.decode(greedy_output[0], skip_special_tokens=True)
