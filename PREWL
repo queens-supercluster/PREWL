@@ -69,3 +69,4 @@ resp = model.infer(new_input)
 print("\n New input: ", new_input)
 print("Prediction: ", resp)
 print()
+
