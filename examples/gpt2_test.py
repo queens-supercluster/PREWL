@@ -1,28 +1,17 @@
-# PREWL
-
-Prompt Engineering Wrapper for LLMs (PREWL): A library for rapidly prototyping LLM-based applications via prompt engineering for NLU.
-
-## Usage
-
-```python
 import prewl, json
 
 #-----------------------------------------#
 
 # Optionally use a config.json
-# prewl.configure("config.json")
+#prewl.configure("config.json")
 
 # Dynamically detect if the argument is json or a file with json
 prewl.configure({
-    # 'backend': {
-    #     'service'   : 'gpt3', # gpt2, 6b, ...
-    #     'token'     : '12345', # whatever is required for authentication
-    # },
-    'backend': {'service': 'manual'},
+    'backend': {'service': 'gpt2'},
     'repeat-limit': 10, # if making repeated requests, no more than 10
     'newline-delimited': True, # Should a new line indicate the end of the completion
     'classes': ['positive', 'negative', 'neutral'], # defaults to None
-    'max_length': 100,
+    'max-length': 100, # output response upper length limit
 })
 
 #-----------------------------------------#
@@ -65,27 +54,10 @@ prompts = prewl.load_prompts(PATTERN, examples, 'sentiment')
 #  (3) returns the parsed result
 model = prewl.train(prompts) # Model object
 
-# Optionally use a custom method
-def check_for_positive(resp):
-    return "positive" in resp
-model = prewl.train(prompts, check_for_positive)
-
 new_input = "This movie was off the hook!"
 resp = model.infer(new_input)
 
 print("\n New input: ", new_input)
 print("Prediction: ", resp)
 print()
-```
 
-## Contributing
-
-Coming soon...
-
-## Requirements
-
-Coming soon...
-
-## Citing This Work
-
-Coming soon...
