@@ -8,8 +8,7 @@ import prewl, json
 # Dynamically detect if the argument is json or a file with json
 prewl.configure({
     'backend': {'service': 'gpt2'},
-    'repeat-limit': 10, # if making repeated requests, no more than 10
-    'newline-delimited': True, # Should a new line indicate the end of the completion
+    'newline-delimited': False, # Should a new line indicate the end of the completion
     'classes': ['positive', 'negative', 'neutral'], # defaults to None
     'max-length': 100, # output response upper length limit
 })

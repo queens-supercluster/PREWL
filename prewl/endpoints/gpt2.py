@@ -1,24 +1,31 @@
 from prewl.endpoints.base import Endpoint
 
 class GPT2(Endpoint):
-    
+
     def call(self, prompt):
-        # Avoids warnings.
-        import os
-        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-        import tensorflow as tf
-        tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
-        from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
-        tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-        
-        # Add the EOS token as PAD token to avoid warnings.
-        model = TFGPT2LMHeadModel.from_pretrained("gpt2", pad_token_id=tokenizer.eos_token_id)
+        from prewl import CONFIG, silence_tf
 
-        # Encode context the text generation is conditioned to.
-        input_ids = tokenizer.encode(prompt, return_tensors='tf')
+        silence_tf()
 
-        # Generates text until the output length using greedy search as the decoding method.
-        greedy_output = model.generate(input_ids, max_length=100)
+        from transformers import GPT2TokenizerFast
+        tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 
-        return tokenizer.decode(greedy_output[0], skip_special_tokens=True)
+        max_length = len(prompt) + CONFIG.get('max_length', CONFIG['defaults']['max_length'])
+
+        from transformers import pipeline
+        generator = pipeline('text-generation', model='gpt2')
+
+        completions = generator(prompt,
+                                max_length=max_length,
+                                num_return_sequences=1,
+                                return_full_text=False,
+                                clean_up_tokenization_spaces=True,
+                                pad_token_id=tokenizer.eos_token_id)
+
+        resp = completions[0]['generated_text']
+
+        if CONFIG.get('newline-delimited', CONFIG['defaults']['newline-delimited']):
+            resp = resp.split('\n')[0].strip()
+
+        return resp
