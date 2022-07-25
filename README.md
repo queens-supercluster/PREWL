@@ -7,46 +7,11 @@ Prompt Engineering Wrapper for LLMs (PREWL): A library for rapidly prototyping L
 ```python
 import prewl, json
 
-#-----------------------------------------#
+# Load configuration for backend (e.g., GPT-3 credentials)
+prewl.configure("config.json")
 
-# Optionally use a config.json
-# prewl.configure("config.json")
-
-# Dynamically detect if the argument is json or a file with json
-prewl.configure({
-    # 'backend': {
-    #     'service'   : 'gpt3', # gpt2, 6b, ...
-    #     'token'     : '12345', # whatever is required for authentication
-    # },
-    'backend': {'service': 'manual'},
-    'repeat-limit': 10, # if making repeated requests, no more than 10
-    'newline-delimited': True, # Should a new line indicate the end of the completion
-    'classes': ['positive', 'negative', 'neutral'], # defaults to None
-    'max_length': 100,
-})
-
-#-----------------------------------------#
-
-PROMPTS = """
-[
-    {
-        "text": "I really don't like this movie.",
-        "sentiment": "negative"
-    },
-
-    {
-        "text": "This flick was sick!",
-        "sentiment": "positive"
-    },
-
-    {
-        "text": "It was ok. I've seen better, though.",
-        "sentiment": "neutral"
-    }
-]
-"""
-
-examples = json.loads(PROMPTS)
+# Load the example prompts
+examples =  prewl.load_promps("prompts.json")
 
 PATTERN = """
 Text: {text}
@@ -54,29 +19,23 @@ Sentiment: {sentiment}
 """
 
 # Prompts objects
-prompts = prewl.load_prompts(PATTERN, examples, 'sentiment')
+prompts = prewl.load_prompts(PATTERN, examples, output='sentiment')
 
-
-#-----------------------------------------#
-
-# Creates a function that when called will
-#  (1) prompt the server
-#  (2) fetch the response
-#  (3) returns the parsed result
+# Build the backend-driven model that will be used
 model = prewl.train(prompts) # Model object
 
-# Optionally use a custom method
-def check_for_positive(resp):
-    return "positive" in resp
-model = prewl.train(prompts, check_for_positive)
 
+# Use the model to build a prompt for the LLM, fetch the completion, and parse it
 new_input = "This movie was off the hook!"
 resp = model.infer(new_input)
+
 
 print("\n New input: ", new_input)
 print("Prediction: ", resp)
 print()
 ```
+
+More examples can be found in the `examples/` directory.
 
 ## Contributing
 
@@ -84,7 +43,18 @@ Coming soon...
 
 ## Requirements
 
-Coming soon...
+### Setting up virtual environment
+
+```bash
+python -m venv .env
+source .env/bin/activate
+```
+
+### Installing torch
+
+```bash
+pip install torch --extra-index-url https://download.pytorch.org/whl/cu113
+```
 
 ## Citing This Work
 
