@@ -11,6 +11,7 @@ prewl.configure({
     'newline-delimited': True, # Should a new line indicate the end of the completion
     'classes': ['positive', 'negative', 'neutral'], # defaults to None
     'max-length': 100, # output response upper length limit
+    'gpu': True, # True or the GPU number you would like to use. False or -1 indicates CPU
 })
 
 #-----------------------------------------#

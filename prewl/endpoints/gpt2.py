@@ -1,31 +1,41 @@
+
+import contextlib, sys
+
 from prewl.endpoints.base import Endpoint
 
 class GPT2(Endpoint):
 
     def call(self, prompt):
 
-        from prewl import CONFIG, silence_tf
+        from prewl import CONFIG
 
-        silence_tf()
+        try:
+            import transformers
+        except:
+            print("\n\tError: For this endpoint, you must install the transformers package\n")
+            exit(1)
+        
+        transformers.utils.logging.set_verbosity(transformers.logging.ERROR)
 
-        from transformers import GPT2TokenizerFast
-        tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
+        # Squash the hugging face outputs
+        log_output = CONFIG.get('output_file', CONFIG['defaults']['output_file'])
+        with open(log_output, 'w') as f:
+            with contextlib.redirect_stdout(f):
 
-        max_length = len(prompt) + CONFIG.get('max_length', CONFIG['defaults']['max_length'])
+                max_length = len(prompt) + CONFIG.get('max_length', CONFIG['defaults']['max_length'])
+                device = CONFIG.get('gpu', CONFIG['defaults']['gpu'])
 
-        from transformers import pipeline
-        generator = pipeline('text-generation', model='gpt2')
+                generator = transformers.pipeline('text-generation', model='gpt2', device=device)
 
-        completions = generator(prompt,
-                                max_length=max_length,
-                                num_return_sequences=1,
-                                return_full_text=False,
-                                clean_up_tokenization_spaces=True,
-                                pad_token_id=tokenizer.eos_token_id)
+                completions = generator(prompt,
+                                        max_length=max_length,
+                                        num_return_sequences=1,
+                                        return_full_text=False,
+                                        clean_up_tokenization_spaces=True)
 
-        resp = completions[0]['generated_text']
+                resp = completions[0]['generated_text']
 
-        if CONFIG.get('newline-delimited', CONFIG['defaults']['newline-delimited']):
-            resp = resp.split('\n')[0].strip()
+                if CONFIG.get('newline-delimited', CONFIG['defaults']['newline-delimited']):
+                    resp = resp.split('\n')[0].strip()
 
         return resp
