@@ -31,7 +31,12 @@ class Model(object):
 
         # (2) Call the appropriate backend
         from prewl import CONFIG
-        ep = create_endpoint(CONFIG['backend']['service'])
+        backend = CONFIG.get('backend', CONFIG['defaults']['backend'])
+
+        assert 'service' in backend, "Backend must at least include 'service'."
+
+        ep = create_endpoint(backend['service'], remote = ('remote' in backend and backend['remote']))
+
         resp = ep.call(prompt)
 
         # (3) Parse the output and return

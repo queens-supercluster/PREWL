@@ -7,11 +7,15 @@ import prewl, json
 
 # Dynamically detect if the argument is json or a file with json
 prewl.configure({
-    'backend': {'service': 'gpt2'},
+    'backend': {
+        'service': 'gpt-j-6b',
+        'remote': True,
+        'token': 'XXXXXXXXXXXXXXXXX' # Use your huggingface token
+    },
     'newline-delimited': True, # Should a new line indicate the end of the completion
     'classes': ['positive', 'negative', 'neutral'], # defaults to None
-    'max-length': 100, # output response upper length limit
-    'gpu': True, # True or the GPU number you would like to use. False or -1 indicates CPU
+    'max-length': 3, # output response upper length limit
+    'gpu': True, # True or the GPU number you would like to use (if local). False (or -1 if local) indicates CPU
 })
 
 #-----------------------------------------#

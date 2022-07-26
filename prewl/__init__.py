@@ -8,6 +8,7 @@ CONFIG = {
         'newline-delimited': False,
         'output_file': 'output.log',
         'gpu': -1,
+        'backend': {'service': 'manual', 'remote': False}
     },
 }
 
