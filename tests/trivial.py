@@ -1,4 +1,6 @@
 
-def test_import():
-    import prewl
-    from prewl import endpoints
+
+class TestTrivialThings:
+    def test_import():
+        import prewl
+        from prewl import endpoints
