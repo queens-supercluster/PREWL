@@ -20,4 +20,5 @@ setuptools.setup(name='prewl',
           "Operating System :: POSIX :: Linux",
       ],
       python_requires='>=3.6',
+      install_requires=['requests'],
       zip_safe=False)
