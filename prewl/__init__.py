@@ -1,4 +1,6 @@
 
+import json, os
+
 from prewl.prompts import Prompts
 from prewl.model import Model
 
@@ -14,6 +16,9 @@ CONFIG = {
 
 # Set the configuration for the prewl library
 def configure(config):
+    if os.path.isfile(config):
+        with open(config, 'r') as f:
+            config = json.load(f)
     global CONFIG
     CONFIG.update(config)
     if 'gpu' in CONFIG and CONFIG['gpu'] in [True, False]:
