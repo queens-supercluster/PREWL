@@ -4,15 +4,18 @@ import json, os
 from prewl.prompts import Prompts
 from prewl.model import Model
 
-CONFIG = {
-    'defaults': {
-        'max_length': 100,
-        'newline-delimited': False,
-        'output_file': 'output.log',
-        'gpu': -1,
-        'backend': {'service': 'manual', 'remote': False}
-    },
-}
+
+def reset_config():
+    global CONFIG
+    CONFIG = {
+        'defaults': {
+            'max_length': 100,
+            'newline-delimited': False,
+            'output_file': 'output.log',
+            'gpu': -1,
+            'backend': {'service': 'manual', 'remote': False}
+        },
+    }
 
 # Set the configuration for the prewl library
 def configure(config):
@@ -32,3 +35,5 @@ def train(prompts, resp_func = lambda x: x):
     m = Model(prompts, resp_func)
     m.train()
     return m
+
+reset_config()
