@@ -12,7 +12,8 @@ class TestConfig:
     
     def test_file(self):
         with tempfile.NamedTemporaryFile() as tmp:
-            tmp.write("{'gpu': true}")
+            with open(tmp.name, 'w') as f:
+                f.write("{'gpu': true}")
             assert 'gpu' not in prewl.CONFIG
             prewl.configure(tmp.name)
             assert 'gpu' in prewl.CONFIG
