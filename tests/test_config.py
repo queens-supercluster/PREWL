@@ -15,7 +15,7 @@ class TestConfig:
         prewl.reset_config()
         with tempfile.NamedTemporaryFile() as tmp:
             with open(tmp.name, 'w') as f:
-                f.write("{'test': 123}")
+                f.write('{"test": 123}')
             assert 'test' not in prewl.CONFIG
             prewl.configure(tmp.name)
             assert 'test' in prewl.CONFIG
