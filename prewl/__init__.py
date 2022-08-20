@@ -16,7 +16,7 @@ CONFIG = {
 
 # Set the configuration for the prewl library
 def configure(config):
-    if os.path.isfile(config):
+    if isinstance(config, str) and os.path.isfile(config):
         with open(config, 'r') as f:
             config = json.load(f)
     global CONFIG
