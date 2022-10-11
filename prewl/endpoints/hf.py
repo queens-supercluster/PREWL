@@ -2,6 +2,7 @@
 import contextlib, sys
 
 from prewl.endpoints.base import Endpoint
+from prewl.endpoints.resp_parsers import resp_parser_dict
 
 class HF(Endpoint):
 
@@ -22,9 +23,13 @@ class HF(Endpoint):
         assert 'token' in CONFIG['backend'], "Must provide 'token' in the 'backend' configuration to call huggingface remotely."
         token = CONFIG['backend']['token']
 
-        params = {
-            'max_new_tokens': min(250, CONFIG.get('max_length', CONFIG['defaults']['max_length']))
-        }
+
+        if CONFIG['backend']['service'] == 'bert-base-uncased':
+            params = {}
+        else:
+            params = {
+                'max_new_tokens': min(250, CONFIG.get('max_length', CONFIG['defaults']['max_length']))
+            }
 
         options = {
             'use_gpu': CONFIG.get('gpu', CONFIG['defaults']['gpu']),
@@ -34,16 +39,10 @@ class HF(Endpoint):
         API_URL = f"https://api-inference.huggingface.co/models/{self.model}"
         headers = {"Authorization": f"Bearer {token}"}
 
+        # sends a request with the composed prompt, params like max_new_tokens, and options like use_gpu and use_cache
         response = requests.post(API_URL, headers=headers, json={"inputs": prompt, "parameters": params, "options": options})
 
-        resp = response.json()[0]['generated_text']
-        assert prompt in resp, "Response doesn't contain prompt:\n" % resp
-        resp = resp.split(prompt)[1]
-        
-        if CONFIG.get('newline-delimited', CONFIG['defaults']['newline-delimited']):
-            resp = resp.split('\n')[0].strip()
-        
-        return resp
+        return resp_parser_dict[CONFIG.get('resp_parser')](response, prompt)
             
 
     def _call_local(self, prompt):

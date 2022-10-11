@@ -7,6 +7,7 @@ huggingface_options = {
     'gpt2': 'gpt2',
     'bloom': 'bigscience/bloom',
     'gpt-j-6b': 'EleutherAI/gpt-j-6B',
+    'bert-base-uncased': 'bert-base-uncased'
 }
 
 def create_endpoint(ep_type, remote):

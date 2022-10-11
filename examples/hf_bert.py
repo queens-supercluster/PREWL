@@ -8,15 +8,15 @@ import prewl, json
 # Dynamically detect if the argument is json or a file with json
 prewl.configure({
     'backend': {
-        'service': 'gpt-j-6b',
+        'service': 'bert-base-uncased',
         'remote': True,
         'token': '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' # Use your huggingface token
     },
     'newline-delimited': True, # Should a new line indicate the end of the completion
-    'classes': ['positive', 'negative', 'neutral'], # defaults to None
+    'classes': None, # defaults to None
     'max-length': 3, # output response upper length limit
     'gpu': True, # True or the GPU number you would like to use (if local). False (or -1 if local) indicates CPU,
-    'resp_parser': 'text_gen_parser'
+    'resp_parser': 'mask_fill_parser'
 })
 
 #-----------------------------------------#
@@ -24,18 +24,15 @@ prewl.configure({
 PROMPTS = """
 [
     {
-        "text": "I really don't like this movie.",
-        "sentiment": "negative"
+        "text": "I ate popcorn at the movies."
     },
 
     {
-        "text": "This flick was sick!",
-        "sentiment": "positive"
+        "text": "This flick was sick!"
     },
 
     {
-        "text": "It was ok. I've seen better, though.",
-        "sentiment": "neutral"
+        "text": "It was ok. I've seen better, though."
     }
 ]
 """
@@ -43,12 +40,11 @@ PROMPTS = """
 examples = json.loads(PROMPTS)
 
 PATTERN = """
-Text: {text}
-Sentiment: {sentiment}
+{text}
 """
 
 # Prompts objects
-prompts = prewl.load_prompts(PATTERN, examples, 'sentiment')
+prompts = prewl.load_prompts(PATTERN, examples, 'mask')
 
 
 #-----------------------------------------#
@@ -59,7 +55,7 @@ prompts = prewl.load_prompts(PATTERN, examples, 'sentiment')
 #  (3) returns the parsed result
 model = prewl.train(prompts) # Model object
 
-new_input = "This movie was off the hook!"
+new_input = "This [MASK] was off the hook!"
 resp = model.infer(new_input)
 
 print("\n New input: ", new_input)

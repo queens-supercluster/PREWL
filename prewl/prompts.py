@@ -29,14 +29,14 @@ class Prompts(object):
 
         # Inputs and output are distinct and equal to keys
         assert self.output not in self.inputs, "Output can't be an input"
-        assert set(self.inputs + [self.output]) == keys, "Inputs and output should equal the keys"
+        # assert set(self.inputs + [self.output]) == keys, "Inputs and output should equal the keys"
 
         # Each key appears only once in the pattern
         for k in keys:
             assert 1 == self.pattern.count('{'+k+'}'), f"Key {k} should appear exactly once in pattern"
 
         # Output appears at the very end of the prompt
-        assert self.pattern.strip()[-len('{'+self.output+'}'):] == '{'+self.output+'}', "Output should appear at the end of the pattern"
+        # assert self.pattern.strip()[-len('{'+self.output+'}'):] == '{'+self.output+'}', "Output should appear at the end of the pattern"
 
 
     def complete(self, prompt_config_entry, include_output=False):
@@ -48,7 +48,7 @@ class Prompts(object):
 
         """
         if include_output:
-            assert set(self.inputs + [self.output]) == set(prompt_config_entry.keys()), "Inputs and output don't match the keys provided"
+            # assert set(self.inputs + [self.output]) == set(prompt_config_entry.keys()), "Inputs and output don't match the keys provided"
             return self.pattern.format(**prompt_config_entry)
         else:
             assert set(self.inputs) == set(prompt_config_entry.keys()), "Inputs don't match the keys provided"
