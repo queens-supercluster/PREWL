@@ -7,6 +7,9 @@ parser simply returns the json response.
 """
 
 def text_gen_parser(response, prompt):
+    """
+    A parser for the text generation task.
+    """
     resp = response.json()
     resp = resp[0]['generated_text']
     assert prompt in resp, "Response doesn't contain prompt:\n" % resp
@@ -19,9 +22,15 @@ def text_gen_parser(response, prompt):
     return resp
 
 def mask_fill_parser(response, prompt):
+    """
+    A simple parser for the mask fill task. 
+    No processing is needed, so it just returns the 
+    json from the response.
+    """
     resp = response.json()
-    # assert prompt in resp, "Response doesn't contain prompt:\n" % resp
     return resp
     
-resp_parser_dict = {'text_gen_parser': text_gen_parser,
-'mask_fill_parser': mask_fill_parser}
+resp_parser_dict = {
+    'text_gen_parser': text_gen_parser,
+    'mask_fill_parser': mask_fill_parser
+    }
