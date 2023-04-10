@@ -30,7 +30,7 @@ class Prompts(object):
         # Inputs and output are distinct and equal to keys
         assert self.output not in self.inputs, "Output can't be an input"
         # the or mask makes it pass for mask filling task
-        assert self.output is 'mask' or set(self.inputs + [self.output]) == keys, "Inputs and output should equal the keys"
+        assert self.output == 'mask' or set(self.inputs + [self.output]) == keys, "Inputs and output should equal the keys"
 
         # Each key appears only once in the pattern
         for k in keys:
@@ -38,7 +38,7 @@ class Prompts(object):
 
         # Output appears at the very end of the prompt. The or mask clause helps
         # make it pass for mask filling task. 
-        assert self.output is 'mask' or self.pattern.strip()[-len('{'+self.output+'}'):] == '{'+self.output+'}', "Output should appear at the end of the pattern"
+        assert self.output == 'mask' or self.pattern.strip()[-len('{'+self.output+'}'):] == '{'+self.output+'}', "Output should appear at the end of the pattern"
 
 
     def complete(self, prompt_config_entry, include_output=False):
