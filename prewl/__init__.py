@@ -19,6 +19,20 @@ def reset_config():
 
 # Set the configuration for the prewl library
 def configure(config):
+    """
+    This method accepts a dictionary with configuration keys and values
+    OR a string filepath to a configuration json file.
+
+    A notable configuration item is the 'resp_parser'
+    string attribute which specified which parser should be used 
+    to parse the response from the model. The one you need will 
+    depend on what LLM model and task you are using. For example,
+    for parsing responses from text generation models, use:
+     'text_gen_parser'
+    and for responses from mask filling models, use:
+     'mask_fill_parser'
+    All available parsers are defined in resp_parsers.py
+    """
     if isinstance(config, str) and os.path.isfile(config):
         with open(config, 'r') as f:
             config = json.load(f)
