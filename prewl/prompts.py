@@ -50,7 +50,7 @@ class Prompts(object):
 
         """
         if include_output:
-            # assert set(self.inputs + [self.output]) == set(prompt_config_entry.keys()), "Inputs and output don't match the keys provided"
+            assert self.output == 'mask' or set(self.inputs + [self.output]) == set(prompt_config_entry.keys()), "Inputs and output don't match the keys provided"
             return self.pattern.format(**prompt_config_entry)
         else:
             assert set(self.inputs) == set(prompt_config_entry.keys()), "Inputs don't match the keys provided"
